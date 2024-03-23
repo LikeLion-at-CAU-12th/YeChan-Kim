@@ -5,4 +5,8 @@
 - MBTI는 ISTP입니다 :smile:  
 - 1년동안 잘 부탁드립니다-!
 
+
 <img src="./멋사 12기.gif" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+- 3주차 장고 실습해보았습니다!
+<img src="./django.jpg" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
