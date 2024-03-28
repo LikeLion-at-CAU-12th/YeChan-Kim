@@ -5,4 +5,5 @@ urlpatterns = [
     path('', hello_world, name = 'hello_world'),
     path('page', index, name='my-page'),
     path('information', info, name ='info'),
+    path('<int:id>' , get_post_detail, name = "게시글 조회"),
 ]
