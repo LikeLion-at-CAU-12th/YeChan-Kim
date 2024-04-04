@@ -8,5 +8,9 @@
 
 <img src="./멋사 12기.gif" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
 
-- 3주차 장고 실습해보았습니다!
-![django](https://github.com/LikeLion-at-CAU-12th/YeChan-Kim/assets/67827316/df7aa5d2-bd0b-4352-a88a-613caccfb657)
+# 4주차 db 스탠다드 과제입니다!
+- Admin Page입니다-!
+<img src="./Admin page.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+- ERD입니다-!
+<img src="./ERD.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
