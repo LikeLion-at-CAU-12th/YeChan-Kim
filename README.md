@@ -30,6 +30,9 @@
 - 최근 일주일간 포스트 조회 성공 사진입니다. (postman)
 <img src="./photos/스탠다드 인증용.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
 
+- 특정 게시글에 대한 댓글 조회 기능 구현 사진입니다.
+<img src="./photos/특정 게시글에 대한 댓글 조회.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
 </div>
 </details>
 

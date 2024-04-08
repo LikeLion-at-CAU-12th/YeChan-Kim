@@ -3,7 +3,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.views.decorators.http import require_http_methods
 from posts.models import * 
-from datetime import date
+from datetime import date, timedelta
 import json
 
 # Create your views here.
@@ -193,7 +193,8 @@ def view_recent_week(request):
     
     if request.method == "GET":
 
-        recent_all = Post.objects.filter(updated_at__range=(date(2024, 4, 4), date(2024, 4, 10))).order_by('-created_at')
+        #updated_at__range = [시작 시간, 끝 시간]
+        recent_all = Post.objects.filter(updated_at__range = [date.today() - timedelta(days=6), date.today()]).order_by('created_at').reverse()
 
         recent_json_all = []
 
