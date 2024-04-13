@@ -46,3 +46,16 @@
 
 </div>
 </details>
+
+<details>
+<summary>6주차 AWS EC2 스탠다드 과제입니다!</summary>
+<div markdown="1">
+
+- http://likelion12th.n-e.kr:8000/ 도메인 적용해본 사진입니다.
+<img src="./photos/내 서버.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+- 배포한 서버에서 로그 가져오는 사진입니다.
+<img src="./photos/로그 확인.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+</div>
+</details>
