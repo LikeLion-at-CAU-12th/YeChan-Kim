@@ -59,3 +59,13 @@
 
 </div>
 </details>
+
+<details>
+<summary>7주차 DRF API 스탠다드 과제입니다!</summary>
+<div markdown="1">
+
+- 첫 번째 게시글(/post/1)에서의 댓글 목록을 가져오는 사진입니다.
+<img src="./photos/Comment 가져오기.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+</div>
+</details>
