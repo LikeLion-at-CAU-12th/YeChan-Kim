@@ -214,3 +214,54 @@ def view_recent_week(request):
             "message" : "일주일간 포스트 조회 성공",
             "data" : recent_json_all
         })
+    
+from .serializers import PostSerializer
+from .serializers import CommentSerializer
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.http import Http404
+
+class PostList(APIView):
+    def post(self, request, format = None):
+        serializer = PostSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+    
+    def get(self, request, format = None):
+        posts = Post.objects.all()
+        serializer = PostSerializer(posts, many = True)
+        return Response(serializer.data)
+    
+class PostDetail(APIView):
+    #세부 get
+    def get(self, request, id):
+        post = get_object_or_404(Post, id= id)
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
+    
+    def put(self, request, id):
+        post = get_object_or_404(Post, id = id)
+        serializer = PostSerializer(post, data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, id):
+        post = get_object_or_404(Post, id = id)
+        post.delete()
+        return Response(status = status.HTTP_204_NO_CONTENT)
+
+# classView로 Comment API 재작성
+class CommentList(APIView):
+    def get(self, request, id):
+        post = get_object_or_404(Post, pk = id)
+        comments = Comment.objects.filter(post_id=post).all()
+        serializer = CommentSerializer(comments, many = True)
+        return Response(serializer.data)
+    
+
+
