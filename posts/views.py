@@ -221,8 +221,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 class PostList(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
     def post(self, request, format = None):
         serializer = PostSerializer(data = request.data)
         if serializer.is_valid():
@@ -236,6 +238,7 @@ class PostList(APIView):
         return Response(serializer.data)
     
 class PostDetail(APIView):
+
     #세부 get
     def get(self, request, id):
         post = get_object_or_404(Post, id= id)
