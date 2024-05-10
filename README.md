@@ -69,3 +69,28 @@
 
 </div>
 </details>
+
+<details>
+<summary>8주차 인증/인가 스탠다드 과제입니다!</summary>
+<div markdown="1">
+
+- user puang 회원가입 하는 사진입니다.
+<img src="./photos/user puang 생성.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+- user puang login하는 사진입니다.
+<img src="./photos/user puang login 성공.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+- puang이가 만든 5번째 게시글입니다.
+<img src="./photos/puang이가 만든 게시글 5.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+- 해당 게시글은 login 없이는 아예 접근이 되지 않습니다.
+<img src="./photos/login 없이는 아예 접근 불가.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+- 토큰을 넣어준다면, 읽는 것은 가능합니다.
+<img src="./photos/토큰 넣어주면 읽기 가능.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+- 게시글 작성자라면 수정(put)도 가능합니다.
+<img src="./photos/patch도 되는 모습.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+</div>
+</details>

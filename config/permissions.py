@@ -22,4 +22,4 @@ class IsWriterOrReadonly(BasePermission):
         if request.method in SAFE_METHODS: #SAFE_METHODS = ('GET', 'HEAD', 'OPTIONS")
             return True
         # PUT, DELETE (수정, 삭제) 요청에 대해, 작성자일 경우에만 요청 허용.
-        return obj.author == request.user
+        return obj.writer == request.user
