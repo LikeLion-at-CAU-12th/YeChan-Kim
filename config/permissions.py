@@ -15,8 +15,12 @@ class IsWriterOrReadonly(BasePermission):
     # 게시글 작성자만 수정, 삭제 가능. 
     # 이외의 사용자는 읽기 권한만 갖도록.
     def has_permission(self, request, view):
-        return request.user.is_authenticated 
-    # 인증 먼저 실행.
+        # header에 비밀키를 받아 맞게 입력한 사용자만 모든 API 요청을 허용해야한다
+        secret_key = getattr(settings, 'SECRET_KEY', None)
+        provided_key = request.headers.get('X-Secret-Key')
+        if provided_key != secret_key:
+            return False
+        return request.user.is_authenticated
     
     def has_object_permission(self, request, view, obj):
         if request.method in SAFE_METHODS: #SAFE_METHODS = ('GET', 'HEAD', 'OPTIONS")
