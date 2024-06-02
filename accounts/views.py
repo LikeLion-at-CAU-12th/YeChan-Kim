@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .serializer import *
 from rest_framework_simplejwt.serializers import RefreshToken
 from rest_framework.views import APIView
@@ -7,96 +7,14 @@ from rest_framework import status
 from accounts.request_serializers import OAuthSerializer
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import logout
-
-# Create your views here.
-class RegisterView(APIView):
-
-    def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
-
-        if serializer.is_valid(raise_exception= True):
-            user = serializer.save(request)
-            token = RefreshToken.for_user(user)
-            refresh_token = str(token)
-            access_token = str(token.access_token)
-            res = Response(
-                {
-                    "user" : serializer.data,
-                    "message" : "register success",
-                    "token": {
-                        "access_token" : access_token,
-                        "refresh_token" : refresh_token,
-                    },
-                },
-                status = status.HTTP_201_CREATED,
-            )
-            return res
-        else:
-            return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
-    
-    def validate(self, data):
-        username = data.get("username", None)
-        password = data.get("password", None)
-
-        user = User.get_user_or_none_by_username(username=username)
-
-        if user is None:
-            raise serializers.ValidationError("user account not exists")
-        else:
-            if not user.check_password(raw_password = password):
-                raise serializers.ValidationError("wrong password")
-            
-        token = RefreshToken.for_user(user)
-        refresh_token = str(token)
-        access_token = str(token.access_token)
-
-        data = {
-            "user" : user,
-            "refresh_token" : refresh_token,
-            "access_token" : access_token 
-        }
-
-        return data
-    
-class AuthView(APIView):
-    def post(self, request):
-        serializer = AuthSerializer(data = request.data)
-        if serializer.is_valid(raise_exception = True):
-            user = serializer.validated_data["user"]
-            access_token = serializer.validated_data["access_token"]
-            refresh_token = serializer.validated_data["refresh_token"]
-            res = Response(
-                {
-                    "user" : {
-                        "id" : user.id,
-                        "email" : user.email
-                    },
-                    "message" : "login success",
-                    "token" : {
-                        "access_token" : access_token,
-                        "refresh_token" : refresh_token,
-                    },
-                },
-                status = status.HTTP_200_OK,
-            )
-            res.set_cookie("access-token", access_token, httponly=True)
-            res.set_cookie("refresh-token", refresh_token, httponly = True)
-            return res
-        else:
-            return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
-        
-class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        logout(request)
-        return Response({"message": "로그아웃되었습니다."}, status=status.HTTP_200_OK)
-    
-
 from pathlib import Path
 import os, json
 from django.core.exceptions import ImproperlyConfigured
+from json import JSONDecodeError
+from django.http import JsonResponse
+import requests
 
+# Load secrets
 BASE_DIR = Path(__file__).resolve().parent.parent
 secret_file = os.path.join(BASE_DIR, "secrets.json")
 
@@ -116,24 +34,101 @@ GOOGLE_CALLBACK_URI = get_secret("GOOGLE_CALLBACK_URI")
 GOOGLE_CLIENT_ID = get_secret("GOOGLE_CLIENT_ID")
 GOOGLE_SECRET = get_secret("GOOGLE_SECRET")
 
-from django.shortcuts import redirect
-from json import JSONDecodeError
-from django.http import JsonResponse
-import requests
+# Views
+class RegisterView(APIView):
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.save(request)
+            token = RefreshToken.for_user(user)
+            refresh_token = str(token)
+            access_token = str(token.access_token)
+            res = Response(
+                {
+                    "user": serializer.data,
+                    "message": "register success",
+                    "token": {
+                        "access_token": access_token,
+                        "refresh_token": refresh_token,
+                    },
+                },
+                status=status.HTTP_201_CREATED,
+            )
+            return res
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def validate(self, data):
+        username = data.get("username", None)
+        password = data.get("password", None)
+
+        user = User.get_user_or_none_by_username(username=username)
+
+        if user is None:
+            raise serializers.ValidationError("user account not exists")
+        else:
+            if not user.check_password(raw_password=password):
+                raise serializers.ValidationError("wrong password")
+            
+        token = RefreshToken.for_user(user)
+        refresh_token = str(token)
+        access_token = str(token.access_token)
+
+        data = {
+            "user": user,
+            "refresh_token": refresh_token,
+            "access_token": access_token 
+        }
+
+        return data
+
+class AuthView(APIView):
+    def post(self, request):
+        serializer = AuthSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            user = serializer.validated_data["user"]
+            access_token = serializer.validated_data["access_token"]
+            refresh_token = serializer.validated_data["refresh_token"]
+            res = Response(
+                {
+                    "user": {
+                        "id": user.id,
+                        "email": user.email
+                    },
+                    "message": "login success",
+                    "token": {
+                        "access_token": access_token,
+                        "refresh_token": refresh_token,
+                    },
+                },
+                status=status.HTTP_200_OK,
+            )
+            res.set_cookie("access-token", access_token, httponly=True)
+            res.set_cookie("refresh-token", refresh_token, httponly=True)
+            return res
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        logout(request)
+        return Response({"message": "로그아웃되었습니다."}, status=status.HTTP_200_OK)
 
 def google_login(request):
-   scope = GOOGLE_SCOPE_USERINFO        # + "https://www.googleapis.com/auth/drive.readonly" 등 scope 설정 후 자율적으로 추가
+   scope = GOOGLE_SCOPE_USERINFO
    return redirect(f"{GOOGLE_REDIRECT}?client_id={GOOGLE_CLIENT_ID}&response_type=code&redirect_uri={GOOGLE_CALLBACK_URI}&scope={scope}")
 
 def google_callback(request):
-    code = request.GET.get("code")      # Query String 으로 넘어옴
+    code = request.GET.get("code")
     
     token_req = requests.post(f"https://oauth2.googleapis.com/token?client_id={GOOGLE_CLIENT_ID}&client_secret={GOOGLE_SECRET}&code={code}&grant_type=authorization_code&redirect_uri={GOOGLE_CALLBACK_URI}")
     token_req_json = token_req.json()
     error = token_req_json.get("error")
 
     if error is not None:
-        raise JSONDecodeError(error)
+        return JsonResponse({'error': error}, status=status.HTTP_400_BAD_REQUEST)
 
     google_access_token = token_req_json.get('access_token')
 
@@ -141,17 +136,22 @@ def google_callback(request):
     res_status = email_response.status_code
 
     if res_status != 200:
-        return JsonResponse({'status': 400,'message': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse({'status': 400, 'message': 'Bad Request'}, status=status.HTTP_400_BAD_REQUEST)
     
     email_res_json = email_response.json()
-    # email = email_res_json.get('email')
+    email = email_res_json.get('email')
+    provider = email_res_json.get('issued_to')
 
-    serializer = OAuthSerializer(data=email_res_json)
-    try:
-        if serializer.is_valid(raise_exception=True):
-            user = serializer.validated_data["user"]
-            access_token = serializer.validated_data["access_token"]
-            refresh_token = serializer.validated_data["refresh_token"]
+    # Check if the provider is Google
+    if provider != GOOGLE_CLIENT_ID:
+        return JsonResponse({'status': 400, 'message': 'Invalid provider'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user = User.get_user_or_none_by_email(email)
+    if user is not None:
+        if user.is_google_social_user():
+            token = RefreshToken.for_user(user)
+            refresh_token = str(token)
+            access_token = str(token.access_token)
             res = JsonResponse(
                 {
                     "user": {
@@ -169,5 +169,32 @@ def google_callback(request):
             res.set_cookie("access-token", access_token, httponly=True)
             res.set_cookie("refresh-token", refresh_token, httponly=True)
             return res
-    except:       # 회원가입이 필요함
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return JsonResponse({'status': 400, 'message': 'Not a Google social user'}, status=status.HTTP_400_BAD_REQUEST)
+    else:
+        serializer = OAuthSerializer(data=email_res_json)
+        try:
+            if serializer.is_valid(raise_exception=True):
+                user = serializer.save()
+                token = RefreshToken.for_user(user)
+                refresh_token = str(token)
+                access_token = str(token.access_token)
+                res = JsonResponse(
+                    {
+                        "user": {
+                            "id": user.id,
+                            "email": user.email,
+                        },
+                        "message": "login success",
+                        "token": {
+                            "access_token": access_token,
+                            "refresh_token": refresh_token,
+                        },
+                    },
+                    status=status.HTTP_200_OK,
+                )
+                res.set_cookie("access-token", access_token, httponly=True)
+                res.set_cookie("refresh-token", refresh_token, httponly=True)
+                return res
+        except Exception as e:
+            return JsonResponse({'status': 400, 'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)

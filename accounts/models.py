@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from allauth.socialaccount.models import SocialAccount
 
 #accounts/models.py
 
@@ -19,3 +20,10 @@ class User(AbstractUser):
             return User.objects.get(email = email)
         except Exception:
             return None
+
+    def is_google_social_user(self):
+        try:
+            social_user = SocialAccount.objects.get(user=self)
+            return social_user.provider == 'google'
+        except SocialAccount.DoesNotExist:
+            return False

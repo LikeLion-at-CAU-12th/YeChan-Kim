@@ -94,3 +94,14 @@
 
 </div>
 </details>
+
+<details>
+<summary>9주차 스탠다드 과제입니다!</summary>
+<div markdown="1">
+
+- social account 생성하는 과정입니다.
+<img src="./photos/social account.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+
+</div>
+</details>
