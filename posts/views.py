@@ -222,9 +222,10 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.http import Http404
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from config.permissions import *
 
 class PostList(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsRightKey]
     def post(self, request, format = None):
         serializer = PostSerializer(data = request.data)
         if serializer.is_valid():
@@ -238,7 +239,7 @@ class PostList(APIView):
         return Response(serializer.data)
     
 class PostDetail(APIView):
-
+    permission_classes = [IsWriterOrReadonly]
     #세부 get
     def get(self, request, id):
         post = get_object_or_404(Post, id= id)
@@ -265,6 +266,12 @@ class CommentList(APIView):
         comments = Comment.objects.filter(post_id=post).all()
         serializer = CommentSerializer(comments, many = True)
         return Response(serializer.data)
+    
+
+
+
+
+
     
 
 
