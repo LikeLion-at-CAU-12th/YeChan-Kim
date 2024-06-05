@@ -1,4 +1,5 @@
 from django.db import models
+from .validators import *
 
 ## 추상 클래스 정의
 class BaseModel(models.Model):
@@ -22,6 +23,15 @@ class Post(BaseModel):
     writer = models.CharField(verbose_name="작성자", max_length = 10, null=True)
     category = models.CharField(choices=CHOICES, max_length=20)
     # image = models.ImageField(upload_to = "%Y/%m/%d")
+    thumbnail = models.ImageField(null = True, blank = True, verbose_name = "썸네일", validators=[validate_image_extension])
+    thumbnail_url = models.URLField(null = True, blank= True, verbose_name = "썸네일 URL")
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        if self.thumbnail:
+            self.thumbnail_url = self.thumbnail.url
+            super().save(update_fields=['thumbnail_url'])
+
 
 class Comment(BaseModel):
     id = models.AutoField(primary_key=True)

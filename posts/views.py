@@ -225,7 +225,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from config.permissions import *
 
 class PostList(APIView):
-    permission_classes = [IsRightKey]
+    # permission_classes = [IsRightKey]
     def post(self, request, format = None):
         serializer = PostSerializer(data = request.data)
         if serializer.is_valid():
@@ -239,7 +239,7 @@ class PostList(APIView):
         return Response(serializer.data)
     
 class PostDetail(APIView):
-    permission_classes = [IsWriterOrReadonly]
+    # permission_classes = [IsWriterOrReadonly]
     #세부 get
     def get(self, request, id):
         post = get_object_or_404(Post, id= id)
