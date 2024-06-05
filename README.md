@@ -105,3 +105,20 @@
 
 </div>
 </details>
+
+</div>
+</details>
+
+<details>
+<summary>10주차 스탠다드 과제입니다!</summary>
+<div markdown="1">
+
+- PNG 파일은 업로드 되지 않도록 하였습니다.
+<img src="./photos/PNG Reject.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+- JPG 파일이었기에 업로드되었고, 해당 썸네일의 url이 정상적으로 들어간 모습입니다.(By Datagrip)
+<img src="./photos/Thumbnail input success.JPG" width="100%" height="100%" title="LikeLion 12th" alt="멋사"></img>
+
+
+</div>
+</details>
