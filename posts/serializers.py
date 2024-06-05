@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Post
 from .models import Comment
+from .validators import *
 
 class PostSerializer(serializers.ModelSerializer):
     
@@ -13,6 +14,9 @@ class PostSerializer(serializers.ModelSerializer):
         #exclude = ['category']
         #읽기 전용 필드 지정
         #read_only_fields = ['writer']
+    def validate_thumbnail(self, value):
+        validate_image_extension(value)
+        return value
 
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
